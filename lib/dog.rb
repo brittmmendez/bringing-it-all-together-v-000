@@ -44,13 +44,19 @@ def self.create(name:, breed:)
   dog.save
 end
 
-def self.new_from_db(row)
-  id=row[0]
-  name=row[1]
-  breed=row[2]
-  dog=self.new(id,name,breed)
-  dog
+def self.find_by_id(x)
+  sql=<<-SQL
+  SELECT * FROM dogs
+  WHERE id=?
+  LIMIT 1
+  SQL
+
+  DB[:conn].execute(sql, x).map do |row|
+    self.new_from_db(row)
+  end.first
+  
 end
+
 
 def self.find_by_name(name)
   sql=<<-SQL
@@ -64,6 +70,13 @@ def self.find_by_name(name)
   end.first
 end
 
+def self.new_from_db(row)
+  id=row[0]
+  name=row[1]
+  breed=row[2]
+  dog=self.new(id,name,breed)
+  dog
+end
 
 def update
   sql=<<-SQL
