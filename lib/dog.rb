@@ -55,7 +55,7 @@ def update
   SQL
 
   DB[:conn].execute(sql, self.name, self.breed, self.id)
-  
+
 end
 def save
   if self.id
